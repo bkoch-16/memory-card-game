@@ -3,31 +3,25 @@ import "../styles/Card.css";
 
 export default function Card({ searchTerm }) {
   const dataRef = useRef(null);
-
   useEffect(() => {
-    let ignore = false;
-    const searchEndPoint = "https://api.giphy.com/v1/gifs/search/";
-    const apiKey = "qTQWvwscGyieFD2MgbroAfFBI1r7iVuj";
-    console.log(searchEndPoint + "?q=" + searchTerm + "&api_key=" + apiKey);
-    if (!ignore) {
-      fetch(
+    async function fetchData() {
+      const searchEndPoint = "https://api.giphy.com/v1/gifs/search/";
+      const apiKey = "qTQWvwscGyieFD2MgbroAfFBI1r7iVuj";
+      const response = await fetch(
         searchEndPoint + "?q=" + searchTerm + "&api_key=" + apiKey + "&limit=1",
         {
           mode: "cors",
         }
-      )
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (response) {
-          dataRef.current = response.data[0].url;
-          console.log(dataRef.current);
-        });
+      );
+      const jsonData = await response.json();
+      dataRef.current = jsonData.data[0].images.original.url;
     }
-    return () => {
-      ignore = true;
-    };
+    fetchData();
   }, [searchTerm]);
-  console.log(dataRef.current);
-  return <img src={dataRef.current} alt="" />;
+  return (
+    <button className="card">
+      <img src={dataRef.current} alt="" />
+      <h1>{searchTerm}</h1>
+    </button>
+  );
 }
