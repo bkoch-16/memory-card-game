@@ -40,11 +40,12 @@ function App() {
         imageUrl: jsonData.data[0].images.original.url,
       });
     }
+    /* THIS ISNT WORKING
     cardStatus.forEach((card) => {
       if (card.imageUrl === null) {
         fetchData();
       }
-    });
+    });*/
   }, [cardStatus]);
   function randomizeOrder() {
     const initialOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -53,6 +54,18 @@ function App() {
   }
 
   const shuffledOrder = randomizeOrder();
+
+  function handleClick() {
+    if (cardStatus.hasSelected === false) {
+      setCardStatus({ ...cardStatus, hasSelected: true });
+      setCurrentScore(currentScore + 1);
+    } else {
+      if (currentScore > highScore) {
+        setHighScore(currentScore);
+      }
+      //reset game
+    }
+  }
   return (
     <>
       <header>
@@ -62,7 +75,11 @@ function App() {
           <span>Best Score: {highScore}</span>
         </div>
       </header>
-      <Board cardStatus={cardStatus} shuffledOrder={shuffledOrder} />
+      <Board
+        cardStatus={cardStatus}
+        shuffledOrder={shuffledOrder}
+        handleClick={handleClick}
+      />
     </>
   );
 }
