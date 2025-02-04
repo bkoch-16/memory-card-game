@@ -4,7 +4,7 @@ export default function Card({ cardStatus }) {
   return (
     <button className="card">
       <img src={cardStatus.imageUrl} alt="" />
-      <h1>{cardStatus.searchTerm}</h1>
+      <h2>{cardStatus.searchTerm}</h2>
     </button>
   );
 }

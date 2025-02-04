@@ -53,7 +53,18 @@ function App() {
   }
 
   const shuffledOrder = randomizeOrder();
-  return <Board cardStatus={cardStatus} shuffledOrder={shuffledOrder} />;
+  return (
+    <>
+      <header>
+        <h1>Memory Game</h1>
+        <div className="scoreBox">
+          <span>Current Score: {currentScore}</span>
+          <span>Best Score: {highScore}</span>
+        </div>
+      </header>
+      <Board cardStatus={cardStatus} shuffledOrder={shuffledOrder} />
+    </>
+  );
 }
 
 export default App;

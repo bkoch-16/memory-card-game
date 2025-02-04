@@ -1,3 +1,15 @@
 #root {
   width: 100%;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.scoreBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 10px;
+}
