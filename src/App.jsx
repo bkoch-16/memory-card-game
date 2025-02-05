@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Board from "./components/Board";
 import "./App.css";
 
-function App() {
+export default function App() {
   const initialCardStatus = [
     {
       searchTerm: "cat",
@@ -77,22 +77,20 @@ function App() {
         }
       );
       const jsonData = await response.json();
-      setCardStatus({
-        ...cardStatus,
-        imageUrl: jsonData.data[0].images.original.url,
-      });
+      return jsonData.data[0].images.original.url;
     }
 
-    cardStatus.map((card) => {
+    const mapImage = cardStatus.map((card) => {
       if (card.imageUrl === "src/assets/react.svg") {
-        try {
-          //fetchData(card);
-        } catch (error) {
-          console.log(error);
-        }
+        const cardImage = fetchData(card);
+        return { ...card, imageUrl: cardImage };
+      } else {
+        return card;
       }
     });
-  }, [cardStatus]);
+    setCardStatus(mapImage);
+  }, [cardStatus.searchTerm]);
+
   function randomizeOrder() {
     const initialOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     const shuffledOrder = initialOrder.sort(() => 0.5 - Math.random());
@@ -105,10 +103,8 @@ function App() {
     const clickHandle = cardStatus.map((card) => {
       if (card.searchTerm === selectedCardName) {
         if (card.hasSelected === false) {
-          console.log("FLAG FALSE");
           return { ...card, hasSelected: true };
         } else {
-          console.log("FLAG TRUE");
           setGameOver(true);
           return card;
         }
@@ -129,7 +125,7 @@ function App() {
       setGameOver(false);
     }
   }
-  console.log(shuffledOrder);
+
   return (
     <>
       <header>
@@ -147,5 +143,3 @@ function App() {
     </>
   );
 }
-
-export default App;

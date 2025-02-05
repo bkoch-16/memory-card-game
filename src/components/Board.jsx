@@ -2,8 +2,6 @@ import Card from "./Card";
 import "../styles/Board.css";
 
 export default function Board({ cardStatus, shuffledOrder, handleClick }) {
-  console.log(cardStatus + shuffledOrder);
-
   return (
     <div className="container">
       <Card

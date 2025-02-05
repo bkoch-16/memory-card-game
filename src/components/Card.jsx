@@ -1,7 +1,6 @@
 import "../styles/Card.css";
 
 export default function Card({ cardStatus, handleClick }) {
-  console.log(cardStatus);
   return (
     <button
       className="card"
