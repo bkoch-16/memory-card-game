@@ -60,6 +60,7 @@ function App() {
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
   const [cardStatus, setCardStatus] = useState(initialCardStatus);
+  const [gameOver, setGameOver] = useState(false);
   useEffect(() => {
     async function fetchData(cardStatus) {
       const searchEndPoint = "https://api.giphy.com/v1/gifs/search/";
@@ -85,7 +86,7 @@ function App() {
     cardStatus.map((card) => {
       if (card.imageUrl === "src/assets/react.svg") {
         try {
-          fetchData(card);
+          //fetchData(card);
         } catch (error) {
           console.log(error);
         }
@@ -98,19 +99,37 @@ function App() {
     return shuffledOrder;
   }
 
-  const shuffledOrder = randomizeOrder();
+  let shuffledOrder = randomizeOrder();
 
-  function handleClick() {
-    if (cardStatus.hasSelected === false) {
-      setCardStatus({ ...cardStatus, hasSelected: true });
+  function handleClick(selectedCardName) {
+    const clickHandle = cardStatus.map((card) => {
+      if (card.searchTerm === selectedCardName) {
+        if (card.hasSelected === false) {
+          console.log("FLAG FALSE");
+          return { ...card, hasSelected: true };
+        } else {
+          console.log("FLAG TRUE");
+          setGameOver(true);
+          return card;
+        }
+      } else {
+        return card;
+      }
+    });
+    setCardStatus(clickHandle);
+    if (gameOver === false) {
       setCurrentScore(currentScore + 1);
+      shuffledOrder = randomizeOrder();
     } else {
       if (currentScore > highScore) {
         setHighScore(currentScore);
       }
       setCardStatus(initialCardStatus);
+      setCurrentScore(0);
+      setGameOver(false);
     }
   }
+  console.log(shuffledOrder);
   return (
     <>
       <header>
