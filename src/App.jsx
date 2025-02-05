@@ -3,24 +3,65 @@ import Board from "./components/Board";
 import "./App.css";
 
 function App() {
+  const initialCardStatus = [
+    {
+      searchTerm: "cat",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    { searchTerm: "dog", hasSelected: false, imageUrl: "src/assets/react.svg" },
+    { searchTerm: "cow", hasSelected: false, imageUrl: "src/assets/react.svg" },
+    {
+      searchTerm: "pigeon",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "squirrel",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "parrot",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "wolf",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "bear",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "deer",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "eagle",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "giraffe",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+    {
+      searchTerm: "elephant",
+      hasSelected: false,
+      imageUrl: "src/assets/react.svg",
+    },
+  ];
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
-  const [cardStatus, setCardStatus] = useState([
-    { searchTerm: "cat", hasSelected: false, imageUrl: null },
-    { searchTerm: "dog", hasSelected: false, imageUrl: null },
-    { searchTerm: "cow", hasSelected: false, imageUrl: null },
-    { searchTerm: "pigeon", hasSelected: false, imageUrl: null },
-    { searchTerm: "squirrel", hasSelected: false, imageUrl: null },
-    { searchTerm: "parrot", hasSelected: false, imageUrl: null },
-    { searchTerm: "wolf", hasSelected: false, imageUrl: null },
-    { searchTerm: "bear", hasSelected: false, imageUrl: null },
-    { searchTerm: "deer", hasSelected: false, imageUrl: null },
-    { searchTerm: "eagle", hasSelected: false, imageUrl: null },
-    { searchTerm: "giraffe", hasSelected: false, imageUrl: null },
-    { searchTerm: "elephant", hasSelected: false, imageUrl: null },
-  ]);
+  const [cardStatus, setCardStatus] = useState(initialCardStatus);
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(cardStatus) {
       const searchEndPoint = "https://api.giphy.com/v1/gifs/search/";
       const apiKey = "qTQWvwscGyieFD2MgbroAfFBI1r7iVuj";
       const response = await fetch(
@@ -40,12 +81,16 @@ function App() {
         imageUrl: jsonData.data[0].images.original.url,
       });
     }
-    /* THIS ISNT WORKING
-    cardStatus.forEach((card) => {
-      if (card.imageUrl === null) {
-        fetchData();
+
+    cardStatus.map((card) => {
+      if (card.imageUrl === "src/assets/react.svg") {
+        try {
+          fetchData(card);
+        } catch (error) {
+          console.log(error);
+        }
       }
-    });*/
+    });
   }, [cardStatus]);
   function randomizeOrder() {
     const initialOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -63,7 +108,7 @@ function App() {
       if (currentScore > highScore) {
         setHighScore(currentScore);
       }
-      //reset game
+      setCardStatus(initialCardStatus);
     }
   }
   return (
