@@ -61,6 +61,7 @@ export default function App() {
   const [currentScore, setCurrentScore] = useState(0);
   const [cardStatus, setCardStatus] = useState(initialCardStatus);
   const [gameOver, setGameOver] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function fetchData(cardStatus) {
       const searchEndPoint = "https://api.giphy.com/v1/gifs/search/";
@@ -79,16 +80,21 @@ export default function App() {
       const jsonData = await response.json();
       return jsonData.data[0].images.original.url;
     }
-
-    const mapImage = cardStatus.map((card) => {
-      if (card.imageUrl === "src/assets/react.svg") {
-        const cardImage = fetchData(card);
-        return { ...card, imageUrl: cardImage };
-      } else {
-        return card;
-      }
-    });
-    setCardStatus(mapImage);
+    async function updateCards() {
+      const mapImage = await Promise.all(
+        cardStatus.map(async (card) => {
+          if (card.imageUrl === "src/assets/react.svg") {
+            const cardImage = await fetchData(card);
+            return { ...card, imageUrl: cardImage };
+          } else {
+            return card;
+          }
+        })
+      );
+      setCardStatus(mapImage);
+      setIsLoading(false);
+    }
+    updateCards();
   }, [cardStatus.searchTerm]);
 
   function randomizeOrder() {
@@ -120,7 +126,14 @@ export default function App() {
       if (currentScore > highScore) {
         setHighScore(currentScore);
       }
-      setCardStatus(initialCardStatus);
+      const resetSelected = cardStatus.map((card) => {
+        if (card.hasSelected === true) {
+          return { ...card, hasSelected: false };
+        } else {
+          return card;
+        }
+      });
+      setCardStatus(resetSelected);
       setCurrentScore(0);
       setGameOver(false);
     }
@@ -135,11 +148,15 @@ export default function App() {
           <span>Best Score: {highScore}</span>
         </div>
       </header>
-      <Board
-        cardStatus={cardStatus}
-        shuffledOrder={shuffledOrder}
-        handleClick={handleClick}
-      />
+      {isLoading ? (
+        <h2>Loading, please wait.</h2>
+      ) : (
+        <Board
+          cardStatus={cardStatus}
+          shuffledOrder={shuffledOrder}
+          handleClick={handleClick}
+        />
+      )}
     </>
   );
 }
